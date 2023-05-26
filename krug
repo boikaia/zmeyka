@@ -1,0 +1,16 @@
+function [x,y] = krug (r, z1, z2)
+
+  kol=length(z1);
+  t=0:0.01:2*pi;
+   wsp1=r*cos(t).+z1(1);
+    wsp2=r*sin(t).+z2(1);
+    x=wsp1;
+    y=wsp2;
+  for i=2:kol,
+    wsp1=r*cos(t).+z1(i);
+    wsp2=r*sin(t).+z2(i);
+    x=[x,wsp1];
+    y=[y,wsp2];
+  endfor
+
+endfunction
