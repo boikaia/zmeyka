@@ -1,0 +1,42 @@
+clear;
+z1=1:2:13;
+z2= [7 7 7 7 7 7 7];
+z11=1; z22=6.5;
+z111=1; z222=7.5;
+hold on;
+[x,y]=krug(1,z1,z2);
+[x1,y1]=krug(0.2,z11,z22);
+[x11,y11]=krug(0.2,z111,z222);
+h=plot(x, y, 'g', "linewidth", 5);
+h1= plot(x1, y1, 'k', "linewidth", 4);
+h11=plot(x11, y11, 'k', "linewidth", 4);
+axis square;
+key=1;
+axis([-50,10,-50,10]);
+while key>0,
+  z1(1)=z1(1)-0.5;
+  for i=2:7,
+    xx=z1(i-1);
+    kor1=fzero(@(a) 2-(sin(a)).^2-(a-xx).^2, xx+0.5);
+    z1(i)=kor1;
+  endfor;
+
+  z2=sin(z1).+7;
+  z11=z11.-0.5;
+  z22=6.5+sin(z11);
+  z111=z111.-0.5;
+  z222=7.5+sin(z111);
+  [x,y]=krug(1,z1,z2);
+  [x1,y1]=krug(0.2,z11,z22);
+  [x11,y11]=krug(0.2,z111,z222);
+  set(h,'XData',x,'YData',y);
+  set(h1,'XData',x1,'YData',y1);
+  set(h11,'XData',x11,'YData',y11);
+  pause(0.05);
+  drawnow
+  if z1(7)<-50
+    key=0;
+  endif
+
+endwhile;
+hold off;
