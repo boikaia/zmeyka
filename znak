@@ -1,0 +1,22 @@
+function ret = znak (alf, key)
+	if alf <= 90,
+    ret=1;
+  endif
+	if alf > 90 && alf <= 180,
+		if key == 1,
+      ret= -1;
+    else
+      ret=1;
+    endif
+	endif
+	if alf > 180 && alf <= 270,
+    ret=-1;
+  endif
+	if alf > 270,
+    if key == 1,
+      ret=1;
+    else
+    ret=-1;
+    endif
+  endif
+endfunction
