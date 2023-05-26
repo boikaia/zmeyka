@@ -1,69 +1,80 @@
-clear;
-gr=pi/180;
-pole=[-10 30];
-kolkrug=3; radius=1;
-wsp=kolkrug:-1:1;
-z1=pole(2)-wsp.*(2*radius);
-z2= ones(1,kolkrug).*(pole(2)-radius -1);
-k1=[pole(1) pole(2)]; k2=[pole(1) pole(1)];
-k3=[pole(2) pole(2)]; k4=[pole(2) pole(1)];
-p1= [(pole(1)+pole(2))/2-(pole(1)+pole(2))/4 (pole(1)+pole(2))/2+(pole(1)+pole(2))/4]; p2=[pole(1)+1 pole(1)+1];
-z11=z1(1); z22=pole(2)-radius -0.5;
-z111=z1(1); z222=pole(2)-radius -1.5;
-fi=ones(1, kolkrug).*(180); fi(1)=-135;  step=0.5;
-hold on;
-plot(k1,k2,"k","linewidth", 5,k2,k1,"k","linewidth", 5,k3,k4,"k","linewidth", 5,k4,k3,"k","linewidth", 5)
-plot (p1,p2,"w","linewidth", 5)
-[x,y]=krug(radius,z1,z2);
-[x1,y1]=krug(radius/5,z11,z22);
-[x11,y11]=krug(radius/5,z111,z222);
-h=plot(x, y, 'g', "linewidth", 5);
-h1= plot(x1, y1, 'r', "linewidth", 4);
-h11=plot(x11, y11, 'r', "linewidth", 4);
-axis square;
-z20=z2; z220=z22; z2220=z222;
-key=1; napr=-1;
-axis([pole(1),pole(2),pole(1),pole(2)]);
-while key>0,
-  for i=1:kolkrug,
-    if z1(i)+radius>pole(2) || z1(i)-radius<pole(1)
-      fi(i)=(-1)*fi(i);
-      napr=napr*(-1);
-    endif
-    if z2(i)+radius>pole(2) || z2(i)-radius<pole(1)
-      fi(i)=180-fi(i);
-    endif
-    if fi(i)*sign(fi(i))>180
-      fi(i)=fi(i)-180*sign(fi(i));
-     endif
-  endfor;
+ clear;
+  hold on;
+  axis square;
+#int i, xmin, ymin, xmax, ymax, alf, k;
+#int  a[3], r, step, x0, y0, ap;
+#	float x[3], y[3], xp, yp, rg = 57.29578;
+  kolkrug=5;
+  rg=180/pi;
+  step = 0.5;
+	r = 1; %радиус
+	xmin = ymin = 2;
+	xmax = ymax = 39;
+  pole=[xmin-r xmax+r];
+  k1=[pole(1) pole(2)]; k2=[pole(1) pole(1)];
+  k3=[pole(2) pole(2)]; k4=[pole(2) pole(1)];
+  plot(k1,k2,'color',[0.5 0.2 0.05],"linewidth", 5)
+  plot(k2,k1,'color',[0.5 0.2 0.05],"linewidth", 5)
+  plot(k3,k4,'color',[0.5 0.2 0.05],"linewidth", 5)
+  plot(k4,k3,'color',[0.5 0.2 0.05],"linewidth", 5)
+  a=ones(1, kolkrug).*(240); % I или III четверть // 60;
 
-  z1(1)=z1(1)+napr*step;
-  for i=2:kolkrug,
-    if fi(i)==fi(i-1),
-      xx=z1(i-1);
-      kor1=fzero(@(a) ((tan(fi(i)*gr)^2+1)*(a-xx)^2-2*radius, xx+napr*step);
-      z1(i)=kor1
-     else
-      z1(i)=z1(i-1)+napr*step;
-    endif
-  endfor;
-  z2=z20+tan(fi.*gr).*z1;
-  z11=z11+napr*step;
-  z22=z220+tan(fi(1)*gr)*z11;
-  z111=z111+napr*step;
-  z222=z2220+tan(fi(1)*gr)*z111;
-  [x,y]=krug(radius,z1,z2);
-  [x1,y1]=krug(radius/5,z11,z22);
-  [x11,y11]=krug(radius/5,z111,z222);
-  set(h,'XData',x,'YData',y);
-  set(h1,'XData',x1,'YData',y1);
-  set(h11,'XData',x11,'YData',y11);
-  pause(0.2);
-  drawnow
-  if z1(1)<=(pole(1)+pole(2))/2-(pole(1)+pole(2))/4+1 && z1(1)>=(pole(1)+pole(2))/2+(pole(1)+pole(2))/4+1 && z2(1)<=pole(1)+radius
-    key=0;
-  endif
+  x0 = xmax - r;
+	y0 = ymin + (ymax - ymin) / 2;
+	alf = a(1) - 180;
+	x(kolkrug) = x0; y(kolkrug) = y0;
+	for i = kolkrug-1:-1:1,
+    k = (kolkrug-i)*2;
+		x(i) = x(kolkrug) + k*r * cos(alf / rg) * znak(a(i), 1);
+		y(i) = y(kolkrug) + k*r * sin(alf / rg) * znak(a(i), 2);
+  endfor
 
-endwhile;
-hold off;
+  x1=x(1); y1=y(1) +r/2;
+  x2=x(1); y2=y(1) -r/2;
+  [zx,zy]=krug(r,x,y);
+  [zx1,zy1]=krug(r/2,x,y);
+  [gx1,gy1]=krug(r/5,x1,y1);
+  [gx2,gy2]=krug(r/5,x2,y2);
+  h=plot(zx, zy, 'color',[0.156 0.347 0.155], "linewidth", 3);
+  #h1= plot(zx1, zy1, 'color',[1 1 0.85], "linewidth", 5);
+  h1= plot(zx1, zy1,"g", "linewidth", 7);
+  gh1=plot(gx1, gy1, 'k', "linewidth", 4);
+  gh2=plot(gx2, gy2, 'k', "linewidth", 4);
+
+  key=1;
+	while key==1,
+    x1=x(1); y1=y(1) +r/2;
+    x2=x(1); y2=y(1) -r/2;
+    [zx,zy]=krug(r,x,y);
+    [zx1,zy1]=krug(r/2,x,y);
+    [gx1,gy1]=krug(r/5,x1,y1);
+    [gx2,gy2]=krug(r/5,x2,y2);
+    set(h,'XData',zx,'YData',zy);
+    set(h1,'XData',zx1,'YData',zy1);
+    set(gh1,'XData',gx1,'YData',gy1);
+    set(gh2,'XData',gx2,'YData',gy2);
+    pause(0.01);
+    drawnow
+		for i = 1:kolkrug,
+      xp = x(i); yp = y(i); ap = a(i);
+			x(i) = x(i) + step*znak(a(i), 1);
+			y(i) = y(i) + step*(tan(a(i) / rg))*sign(tan(a(i) / rg))*znak(a(i), 2);
+
+			if y(i) <= ymin || y(i) >= ymax,
+        a(i) = 360 - a(i);
+      endif
+			if x(i) <= xmin || x(i) >= xmax,
+        if a(i) < 180,
+          a(i) = 180 - a(i);
+        else
+          a(i) = 540 - a(i);
+        endif
+      endif
+			if ap != a(i),
+        %смена направления
+        x(i) = xp + step*znak(a(i), 1);
+				y(i) = yp + step*(tan(a(i) / rg))*sign(tan(a(i) / rg))*znak(a(i), 2);
+      endif
+    endfor
+	endwhile
+  hold off
